@@ -5,6 +5,8 @@ Purpose of this project is to provide most a commonly used base-line application
 
 The goal is to eliminate repetitive tasks and focus on writing the business aspect.
 
+**PS:** `potential-candid-go` is built on top of [this template](https://github.com/usama28232/authexample), hence it follows same setup, APIs and has a document on all <u>how-to</u> stuff if you are looking for it
+
 ## Project Structure & Explanation
 
 The project structure consists of a mixture of MVC & Service based architecture.
