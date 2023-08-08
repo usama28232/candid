@@ -15,13 +15,11 @@ func RegisterRoutes() *mux.Router {
 
 	mux := mux.NewRouter()
 	mux.Use(authMiddleware)
+	helloCont := &HelloController{}
+	userCont := &UserController{}
 
-	mux.HandleFunc("/hello", HelloWorldHandler).Methods(http.MethodGet)
-
-	mux.HandleFunc("/users", GetAllUsersHandler).Methods(http.MethodGet)
-	mux.HandleFunc("/users", CreateUserHandler).Methods(http.MethodPost)
-	mux.HandleFunc("/users/{username:[A-Za-z0-9]+}", GetUserHandler).Methods(http.MethodGet)
-	mux.HandleFunc("/users/{username:[A-Za-z0-9]+}", DeleteUserHandler).Methods(http.MethodDelete)
+	mux = register(userCont, mux)
+	mux = register(helloCont, mux)
 
 	mux.StrictSlash(false)
 	return mux
@@ -30,7 +28,7 @@ func RegisterRoutes() *mux.Router {
 func authMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		if shared.CollectionContains(NOAUTH, r.URL.Path) {
+		if shared.CollectionContainsOrStartsWith(NOAUTH, r.URL.Path) {
 			next.ServeHTTP(w, r)
 		} else {
 			authHeader := r.Header.Get("Authorization")

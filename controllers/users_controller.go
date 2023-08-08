@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"authexample/routes"
 	"authexample/users"
 	"encoding/json"
 	"net/http"
@@ -8,13 +9,17 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func GetAllUsersHandler(w http.ResponseWriter, r *http.Request) {
+type UserController struct {
+	myControllerBase
+}
+
+func (u *UserController) GetAllHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(users.GetAllUsers())
 }
 
-func CreateUserHandler(w http.ResponseWriter, r *http.Request) {
+func (u *UserController) CreateHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var newUser users.User
 	_ = json.NewDecoder(r.Body).Decode(&newUser)
@@ -28,10 +33,10 @@ func CreateUserHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func GetUserHandler(w http.ResponseWriter, r *http.Request) {
+func (u *UserController) GetHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
-	username := params["username"]
+	username := params["value"]
 	_user, err := users.GetUser(username)
 	if err == nil {
 		w.WriteHeader(http.StatusOK)
@@ -42,10 +47,10 @@ func GetUserHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func DeleteUserHandler(w http.ResponseWriter, r *http.Request) {
+func (u *UserController) DeleteHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
-	username := params["username"]
+	username := params["value"]
 	_user, err := users.DeleteUser(username)
 	if err == nil {
 		w.WriteHeader(http.StatusOK)
@@ -54,4 +59,8 @@ func DeleteUserHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(err.Error())
 	}
+}
+
+func (u *UserController) GetRouteModel() routes.RouteConfig {
+	return &users.UserRouteModel{}
 }

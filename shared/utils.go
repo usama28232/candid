@@ -43,9 +43,9 @@ func EncodeResponse(data interface{}, w io.Writer) error {
 	}
 }
 
-func CollectionContains(data []string, target string) bool {
+func CollectionContainsOrStartsWith(data []string, target string) bool {
 	for _, value := range data {
-		if value == target {
+		if value == target || strings.Contains(target, value) {
 			return true
 		}
 	}
