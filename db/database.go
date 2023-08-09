@@ -3,35 +3,41 @@ package db
 import (
 	"database/sql"
 	"fmt"
+	"sync"
 
 	_ "github.com/lib/pq"
 )
 
-var db *sql.DB = nil
+var (
+	db    *sql.DB = nil
+	mutex sync.Mutex
+)
 
-func init_connection() error {
-	psqlconn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME)
+func Init() error {
+	psqlconn := fmt.Sprintf("Database host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME)
+	fmt.Println(psqlconn)
 	var err error
 	// open database
+	if db != nil {
+		return nil
+	}
+	mutex.Lock()
+	defer mutex.Unlock()
 	db, err = sql.Open("postgres", psqlconn)
 	checkError(err)
 
 	return err
+}
 
-	// close database
-	// defer db.Close()
-
-	// check db
-	// err = db.Ping()
-	// checkError(err)
+func Close() error {
+	if db != nil {
+		return db.Close()
+	}
+	return nil
 }
 
 func getConnection() (*sql.DB, error) {
-	var error error = nil
-	if db == nil {
-		error = init_connection()
-	}
-	return db, error
+	return db, nil
 }
 
 func checkError(err error) {
@@ -70,7 +76,6 @@ func Query(query string, args ...any) (*([][]any), error) {
 	}
 	if err == nil {
 		defer rows.Close()
-
 		cols, _ := rows.Columns()
 		data := [][]any{}
 		for rows.Next() {
