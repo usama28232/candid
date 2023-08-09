@@ -19,5 +19,6 @@
 
 # Go workspace file
 go.work
-log.txt
-access_log.txt
+
+# Excluding txt files
+*.txt

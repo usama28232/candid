@@ -1,11 +1,11 @@
-# potential-candid-go
-A minimal application to replicate basic web api crud opertaions.
+# candid
+A core framework to assist web api crud opertaions.
 
-Purpose of this project is to provide most a commonly used base-line application to assist development.
+Purpose of this project is to provide most a commonly used base-line application framework to assist development.
 
 The goal is to eliminate repetitive tasks and focus on writing the business aspect.
 
-**PS:** `potential-candid-go` is built on top of [this template](https://github.com/usama28232/authexample), hence it follows same setup, APIs and has a document on all <u>how-to</u> stuff if you are looking for it
+**PS:** `candid` is built on top of [this template](https://github.com/usama28232/authexample), hence it follows same setup, APIs and has a document on all <u>how-to</u> stuff if you are looking for it
 
 ## Project Structure & Explanation
 
@@ -259,6 +259,10 @@ Logger instance can be obtained by:
 	}
 	....
 ```
+
+There are a couple of logging approaches we can take up, a detailed explanation in [this repository](https://github.com/usama28232/webservice#working-explanation)
+
+This repository implements file/profile based approach
 
 
 ### Shared

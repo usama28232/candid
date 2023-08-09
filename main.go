@@ -13,8 +13,8 @@ import (
 
 func main() {
 	logger := logging.GetLogger()
-	logger.Info("potential-candid-go Framework")
-	logger.Info("source code: https://github.com/usama28232/potential-candid-go")
+	logger.Info("*** starting `candid framework` ***")
+	logger.Info("https://github.com/usama28232/candid")
 	var port string
 	flag.StringVar(&port, "port", "3000", "Specifies Application Port")
 	flag.Parse()
