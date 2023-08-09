@@ -51,10 +51,10 @@ func (cb *myControllerBase) GetRouteModel() (routes.RouteConfig, error) {
 	return nil, errors.New("route model not configured correctly")
 }
 
-func registerCustom(path string, f http.HandlerFunc, r *mux.Router) *mux.Router {
+func registerCustom(path string, f http.HandlerFunc, r *mux.Router, methods ...string) *mux.Router {
 	logger := logging.GetLogger()
 	logger.Debugw("- Adding custom route", "v", path)
-	r.HandleFunc(path, f)
+	r.HandleFunc(path, f).Methods(methods...)
 	return r
 }
 

@@ -62,6 +62,7 @@ func (u *HelloController) GetRouteModel() routes.RouteConfig {
 
 This is the engagement point of service layer code.
 
+...
 
 ### Route-Model
 
@@ -208,6 +209,25 @@ func RegisterRoutes() *mux.Router {
 
 So to add an endpoint, all you have to do is to add it's derived route-model and controller with required landings.
 
+
+To add other custom endpoints, just provide <u>URL</u> `string`, `http.HandlerFunc`, `*mux.Router` (Router instance) and `...string` (Array of allowed http methods)
+
+```
+	...
+	mux = registerCustom("/helloc", helloCont.GetCustomLanding, mux, http.MethodGet, http.MethodDelete)
+	...
+```
+
+```
+func (u *HelloController) GetCustomLanding(w http.ResponseWriter, request *http.Request) {
+	w.Write([]byte(hello.SayHello()))
+}
+```
+
+This way the custom endpoint `/helloc` with entertain `GET` & `DELETE` requests
+
+...
+
 ### Service
 
 This is the layer where business logic is supposed to live.
@@ -264,6 +284,7 @@ There are a couple of logging approaches we can take up, a detailed explanation 
 
 This repository implements file/profile based approach
 
+...
 
 ### Shared
 
@@ -271,6 +292,28 @@ This package contains utility functions, application-config, helper functions an
 
 **PS:** This package will hold message resolver related code
 
+...
+
+### Auth
+
+This package contains authentication helper functions
+
+By default, all endpoints are protected by `Basic-Authentication`
+
+To set an exception for a resource use the `NO_AUTH` string array in `routes_config.go`
+
+```
+var NOAUTH = []string{"/hello/*"}
+```
+
+This supports wildcard at the end of string
+
+To change this to exact match just remove `*` from the end
+
+```
+var NOAUTH = []string{"/hello"}
+```
+...
 
 ## Conclusion
 

@@ -14,7 +14,7 @@ import (
 	"go.uber.org/zap"
 )
 
-var NOAUTH = []string{"/hello"}
+var NOAUTH = []string{"/hello/*"}
 
 func RegisterRoutes() *mux.Router {
 
@@ -26,7 +26,7 @@ func RegisterRoutes() *mux.Router {
 	mux = register(userCont, mux)
 	mux = register(helloCont, mux)
 
-	mux = registerCustom("/helloc", helloCont.GetCustomLanding, mux)
+	mux = registerCustom("/helloc", helloCont.GetCustomLanding, mux, http.MethodGet, http.MethodDelete)
 
 	mux.StrictSlash(false)
 	return mux

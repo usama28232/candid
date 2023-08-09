@@ -16,12 +16,16 @@ func (c *HelloController) GetAllHandler(w http.ResponseWriter, request *http.Req
 	shared.EncodeResponse(hello.SayHello(), w)
 }
 
+func (cb *HelloController) GetHandler(w http.ResponseWriter, r *http.Request) {
+	shared.EncodeResponse(hello.SayHello(), w)
+}
+
 func (c *HelloController) DeleteHandler(w http.ResponseWriter, r *http.Request) {
 	shared.EncodeResponse(hello.SayDelete(), w)
 }
 
 func (u *HelloController) GetCustomLanding(w http.ResponseWriter, request *http.Request) {
-	w.Write([]byte("asdasdasd"))
+	w.Write([]byte(hello.SayHello()))
 }
 
 func (u *HelloController) GetRouteModel() routes.RouteConfig {

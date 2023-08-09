@@ -7,7 +7,7 @@ type HelloRouteModel struct {
 }
 
 func (r *HelloRouteModel) Init() routes.AllowedRoutes {
-	return routes.AllowedRoutes{AllowListAPI: true, AllowDeleteAPI: true}
+	return routes.AllowedRoutes{AllowListAPI: true, AllowDeleteAPI: true, AllowDetailAPI: true}
 }
 
 func (r *HelloRouteModel) GetBaseRoute() (string, error) {
