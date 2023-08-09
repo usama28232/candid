@@ -1,6 +1,6 @@
 package users
 
-import "authexample/routes"
+import "github.com/usama28232/candid/routes"
 
 type UserRouteModel struct {
 	routes.RouteConfigImpl

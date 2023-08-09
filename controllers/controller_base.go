@@ -1,11 +1,12 @@
 package controllers
 
 import (
-	"authexample/logging"
-	"authexample/routes"
 	"encoding/json"
 	"errors"
 	"net/http"
+
+	"github.com/usama28232/candid/logging"
+	"github.com/usama28232/candid/routes"
 
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
@@ -48,6 +49,13 @@ func (cb *myControllerBase) DeleteHandler(w http.ResponseWriter, r *http.Request
 
 func (cb *myControllerBase) GetRouteModel() (routes.RouteConfig, error) {
 	return nil, errors.New("route model not configured correctly")
+}
+
+func registerCustom(path string, f http.HandlerFunc, r *mux.Router) *mux.Router {
+	logger := logging.GetLogger()
+	logger.Debugw("- Adding custom route", "v", path)
+	r.HandleFunc(path, f)
+	return r
 }
 
 func register(controller controllerBase, r *mux.Router) *mux.Router {

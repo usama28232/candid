@@ -1,10 +1,11 @@
 package logging
 
 import (
-	"authexample/shared"
 	"os"
 	"strings"
 	"time"
+
+	"github.com/usama28232/candid/shared"
 
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"

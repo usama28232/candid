@@ -1,6 +1,6 @@
 package hello
 
-import "authexample/routes"
+import "github.com/usama28232/candid/routes"
 
 type HelloRouteModel struct {
 	routes.RouteConfigImpl

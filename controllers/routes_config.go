@@ -1,12 +1,14 @@
 package controllers
 
 import (
-	"authexample/logging"
-	"authexample/shared"
-	"authexample/users"
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/usama28232/candid/auth"
+	"github.com/usama28232/candid/logging"
+	"github.com/usama28232/candid/shared"
+	"github.com/usama28232/candid/users"
 
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
@@ -24,6 +26,8 @@ func RegisterRoutes() *mux.Router {
 	mux = register(userCont, mux)
 	mux = register(helloCont, mux)
 
+	mux = registerCustom("/helloc", helloCont.GetCustomLanding, mux)
+
 	mux.StrictSlash(false)
 	return mux
 }
@@ -38,7 +42,7 @@ func appMiddleware(next http.Handler) http.Handler {
 		meta.Url = r.URL.Path
 		meta.Agent = r.UserAgent()
 
-		if shared.CollectionContainsOrStartsWith(NOAUTH, r.URL.Path) {
+		if auth.BypassAuthFilter(NOAUTH, r.URL.Path) {
 			next.ServeHTTP(w, r)
 		} else {
 			authHeader := r.Header.Get("Authorization")
@@ -46,7 +50,7 @@ func appMiddleware(next http.Handler) http.Handler {
 			if authHeader != "" && strings.HasPrefix(authHeader, "Basic ") {
 				// Decode the base64-encoded username and password
 				encodedCredentials := strings.TrimPrefix(authHeader, "Basic ")
-				decoderStr := shared.DecodeBase64(encodedCredentials)
+				decoderStr := auth.DecodeBase64(encodedCredentials)
 
 				if len(decoderStr) == 0 {
 					http.Error(w, "Invalid Authorization header", http.StatusUnauthorized)
@@ -69,7 +73,7 @@ func appMiddleware(next http.Handler) http.Handler {
 				}
 			} else {
 				// Authentication header is missing or invalid
-				http.Error(w, "unable to parse Auth Header", http.StatusUnauthorized)
+				http.Error(w, "authentication is required", http.StatusUnauthorized)
 			}
 		}
 		meta.Duration = time.Since(startTime).Milliseconds()

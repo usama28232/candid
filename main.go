@@ -1,14 +1,15 @@
 package main
 
 import (
-	"authexample/controllers"
-	"authexample/db"
-	"authexample/logging"
 	"flag"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
+
+	"github.com/usama28232/candid/controllers"
+	"github.com/usama28232/candid/db"
+	"github.com/usama28232/candid/logging"
 )
 
 func main() {

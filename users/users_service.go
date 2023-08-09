@@ -1,11 +1,12 @@
 package users
 
 import (
-	"authexample/db"
-	"authexample/shared"
 	"errors"
 	"fmt"
 	"time"
+
+	"github.com/usama28232/candid/auth"
+	"github.com/usama28232/candid/db"
 )
 
 func GetAllUsers() []User {
@@ -67,7 +68,7 @@ func (u *User) AddUser() (User, error) {
 	if u.USER_ID <= 0 || len(u.USERNAME) <= 0 || len(u.FULL_NAME) <= 0 || len(u.PASSWORD) <= 0 {
 		return User{}, errors.New("check the following fields 'USER_ID', 'USERNAME', 'FULL_NAME' or 'PASSWORD'")
 	}
-	pw, _ := shared.HashPassword(u.PASSWORD)
+	pw, _ := auth.HashPassword(u.PASSWORD)
 
 	_, err := db.Query(ADD_USER, u.USER_ID, u.USERNAME, u.FULL_NAME, pw, u.EMAIL)
 	if err == nil {
@@ -81,7 +82,7 @@ func AuthenticateUser(username, input string) error {
 	// .. get user
 	user, err := GetUser(username)
 	if err == nil {
-		compErr := shared.ComparePassword(user.PASSWORD, input)
+		compErr := auth.ComparePassword(user.PASSWORD, input)
 		if compErr == nil {
 			return compErr
 		} else {

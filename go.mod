@@ -1,4 +1,4 @@
-module authexample
+module github.com/usama28232/candid
 
 go 1.20
 

@@ -1,11 +1,12 @@
 package controllers
 
 import (
-	"authexample/logging"
-	"authexample/routes"
-	"authexample/users"
 	"encoding/json"
 	"net/http"
+
+	"github.com/usama28232/candid/logging"
+	"github.com/usama28232/candid/routes"
+	"github.com/usama28232/candid/users"
 
 	"github.com/gorilla/mux"
 )

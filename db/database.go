@@ -1,10 +1,11 @@
 package db
 
 import (
-	"authexample/shared"
 	"database/sql"
 	"fmt"
 	"sync"
+
+	"github.com/usama28232/candid/shared"
 
 	_ "github.com/lib/pq"
 )
