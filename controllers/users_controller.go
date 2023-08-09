@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"authexample/logging"
 	"authexample/routes"
 	"authexample/users"
 	"encoding/json"
@@ -28,6 +29,7 @@ func (u *UserController) CreateHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusCreated)
 		json.NewEncoder(w).Encode(value)
 	} else {
+		logging.GetLogger().Info(err.Error())
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(err.Error())
 	}
@@ -42,6 +44,7 @@ func (u *UserController) GetHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(_user)
 	} else {
+		logging.GetLogger().Info(err.Error())
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(err.Error())
 	}
@@ -56,6 +59,7 @@ func (u *UserController) DeleteHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(_user)
 	} else {
+		logging.GetLogger().Info(err.Error())
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(err.Error())
 	}

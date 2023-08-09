@@ -1,6 +1,7 @@
 package db
 
 import (
+	"authexample/shared"
 	"database/sql"
 	"fmt"
 	"sync"
@@ -13,20 +14,27 @@ var (
 	mutex sync.Mutex
 )
 
-func Init() error {
-	psqlconn := fmt.Sprintf("Database host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME)
-	fmt.Println(psqlconn)
+func Init() (string, error) {
+
+	dbHost, _ := shared.GetConfigByKey(shared.DB_HOST)
+	dbPort, _ := shared.GetConfigByKey(shared.DB_PORT)
+	dbName, _ := shared.GetConfigByKey(shared.DB_NAME)
+	dbUser, _ := shared.GetConfigByKey(shared.DB_USER)
+	dbPw, _ := shared.GetConfigByKey(shared.DB_PW)
+
+	psqlconn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
+		dbHost.(string), int(dbPort.(float64)), dbUser.(string), dbPw.(string), dbName.(string))
 	var err error
 	// open database
 	if db != nil {
-		return nil
+		return psqlconn, nil
 	}
 	mutex.Lock()
 	defer mutex.Unlock()
 	db, err = sql.Open("postgres", psqlconn)
 	checkError(err)
 
-	return err
+	return psqlconn, err
 }
 
 func Close() error {

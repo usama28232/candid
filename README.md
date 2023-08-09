@@ -212,6 +212,8 @@ So to add an endpoint, all you have to do is to add it's derived route-model and
 
 This is the layer where business logic is supposed to live.
 
+*Currently, service files are identified by '\<model\>_service.go'*
+
 Here is an example of `HelloService`
 
 ```
@@ -227,12 +229,51 @@ For advanced example, Follow `UserController`
 
 ...
 
+### Logging
+
+Logging package holds application configured logger instances `AccessLogger` *(for recording http request logs in 'access_logs.txt')* & `AppLogger` *(for application level logging in 'logs.txt')*
+
+Logging level can be changed from `config.json`
+
+*For now supported logging levels are `info` or `debug`*
+
+```
+{
+    "LOG_PROFILE": "debug",
+	....
+```
+
+Logger instance can be obtained by:
+
+```
+	...
+	logger := logging.GetLogger()
+	rm := controller.GetRouteModel()
+	availableRoutes := rm.Init()
+	baseRoute, baseRErr := rm.GetBaseRoute()
+	logger.Infow("** Route Config **", "Route", baseRoute, zap.Any("Available Routes", availableRoutes))
+
+	if baseRErr == nil && availableRoutes.AllowListAPI {
+		r.HandleFunc(baseRoute, controller.GetAllHandler).Methods(http.MethodGet)
+		logger.Debugw("- Adding Route", "v", baseRoute, "m", http.MethodGet)
+	}
+	....
+```
+
+
+### Shared
+
+This package contains utility functions, application-config, helper functions and global constants
+
+**PS:** This package will hold message resolver related code
+
+
 ## Conclusion
 
 This framework makes development easier and robust.
 You can clone and start writing business right away!
 
-Furthermore, I have plans to add `GORM` and provide basic crud functionality at service layer.
+Furthermore, I have plans to add `GORM` and provide basic crud functionality at service layer *(if possible)* like [java spring framework](https://github.com/usama28232/generic-operations)
 
 
 

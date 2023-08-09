@@ -1,0 +1,14 @@
+package shared
+
+const (
+	LOG_PROFILE_KEY = "LOG_PROFILE"
+	DATETIME_FMT    = "[02/01/2006 15:04:05]"
+	APP_LOG_FILE    = "logs.txt"
+	ACCESS_LOG_FILE = "access_log.txt"
+
+	DB_HOST = "DATABASE_HOST"
+	DB_PORT = "DATABASE_PORT"
+	DB_NAME = "DATABASE_NAME"
+	DB_USER = "DATABASE_USER"
+	DB_PW   = "DATABASE_PASSWORD"
+)

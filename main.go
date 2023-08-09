@@ -3,8 +3,8 @@ package main
 import (
 	"authexample/controllers"
 	"authexample/db"
+	"authexample/logging"
 	"flag"
-	"fmt"
 	"net/http"
 	"os"
 	"os/signal"
@@ -12,12 +12,15 @@ import (
 )
 
 func main() {
-	fmt.Println("potential-candid-go framework")
+	logger := logging.GetLogger()
+	logger.Info("potential-candid-go Framework")
+	logger.Info("source code: https://github.com/usama28232/potential-candid-go")
 	var port string
 	flag.StringVar(&port, "port", "3000", "Specifies Application Port")
 	flag.Parse()
 
-	dbSErr := db.Init()
+	dbconn, dbSErr := db.Init()
+	logger.Debug(dbconn)
 	if dbSErr == nil {
 
 		signals := make(chan os.Signal, 1)
@@ -28,17 +31,17 @@ func main() {
 		<-signals
 
 		dbCErr := db.Close()
-
+		logger.Debugw("closing db connection & release resources")
 		if dbCErr != nil {
-			fmt.Println(dbCErr.Error())
+			logger.Error(dbCErr.Error())
 		}
 
 	} else {
-		fmt.Println(dbSErr.Error())
+		logger.Info(dbSErr.Error())
 	}
 }
 
 func startServer(port string) {
-	fmt.Println("Starting Webservice with", "port", port)
+	logging.GetLogger().Infow("Starting Webservice with", "port", port)
 	http.ListenAndServe(":"+port, controllers.RegisterRoutes())
 }

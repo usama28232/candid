@@ -1,12 +1,15 @@
 package controllers
 
 import (
+	"authexample/logging"
 	"authexample/shared"
 	"authexample/users"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/gorilla/mux"
+	"go.uber.org/zap"
 )
 
 var NOAUTH = []string{"/hello"}
@@ -14,7 +17,7 @@ var NOAUTH = []string{"/hello"}
 func RegisterRoutes() *mux.Router {
 
 	mux := mux.NewRouter()
-	mux.Use(authMiddleware)
+	mux.Use(appMiddleware)
 	helloCont := &HelloController{}
 	userCont := &UserController{}
 
@@ -25,8 +28,15 @@ func RegisterRoutes() *mux.Router {
 	return mux
 }
 
-func authMiddleware(next http.Handler) http.Handler {
+func appMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		accessLogger := logging.GetAccessLogger()
+		startTime := time.Now()
+		meta := AppRequestLog{}
+		meta.Method = r.Method
+		meta.Url = r.URL.Path
+		meta.Agent = r.UserAgent()
 
 		if shared.CollectionContainsOrStartsWith(NOAUTH, r.URL.Path) {
 			next.ServeHTTP(w, r)
@@ -37,6 +47,7 @@ func authMiddleware(next http.Handler) http.Handler {
 				// Decode the base64-encoded username and password
 				encodedCredentials := strings.TrimPrefix(authHeader, "Basic ")
 				decoderStr := shared.DecodeBase64(encodedCredentials)
+
 				if len(decoderStr) == 0 {
 					http.Error(w, "Invalid Authorization header", http.StatusUnauthorized)
 					return
@@ -61,6 +72,8 @@ func authMiddleware(next http.Handler) http.Handler {
 				http.Error(w, "unable to parse Auth Header", http.StatusUnauthorized)
 			}
 		}
+		meta.Duration = time.Since(startTime).Milliseconds()
+		accessLogger.Infow("HttpRequest", zap.Any("v", meta))
 
 	})
 }
